@@ -71,20 +71,20 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(centuty => (
+            {centuries.map(century => (
               <SearchLink
                 data-cy="century"
-                key={centuty}
+                key={century}
                 params={{
-                  centuries: selectedCenturies.includes(centuty)
-                    ? selectedCenturies.filter(c => c !== centuty)
-                    : [...selectedCenturies, centuty],
+                  centuries: selectedCenturies.includes(century)
+                    ? selectedCenturies.filter(c => c !== century)
+                    : [...selectedCenturies, century],
                 }}
                 className={cn('button mr-1', {
-                  'is-info': selectedCenturies.includes(centuty),
+                  'is-info': selectedCenturies.includes(century),
                 })}
               >
-                {centuty}
+                {century}
               </SearchLink>
             ))}
           </div>

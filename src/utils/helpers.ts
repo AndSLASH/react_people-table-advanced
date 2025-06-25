@@ -35,14 +35,14 @@ export const applyFilters = (
 ): Person[] => {
   let filteredPeople = [...people];
 
-  const selectedCenturies = searchParams.getAll('centuries').map(Number);
+  const selectedCenturies = searchParams.getAll('centuries');
 
   if (selectedCenturies.length > 0) {
     filteredPeople = filteredPeople.filter(person => {
       if (person.born) {
         const century = getCenturyFromYear(person.born);
 
-        return selectedCenturies.includes(century);
+        return selectedCenturies.includes(century.toString());
       }
 
       return false;
