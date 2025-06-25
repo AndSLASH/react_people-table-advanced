@@ -88,10 +88,6 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {peopleNotFound && (
-                <p>There are no people matching the current search criteria</p>
-              )}
-
               {peopleLoaded ? (
                 <PeopleProvider peopleLookup={peopleLookup}>
                   <PeopleTable
@@ -102,6 +98,10 @@ export const PeoplePage: React.FC = () => {
                   />
                 </PeopleProvider>
               ) : null}
+
+              {peopleNotFound && (
+                <p>There are no people matching the current search criteria</p>
+              )}
             </div>
           </div>
         </div>
