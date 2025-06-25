@@ -57,27 +57,6 @@ export const applyFilters = (
     );
   }
 
-  const minAgeParam = searchParams.get('minAge');
-  const maxAgeParam = searchParams.get('maxAge');
-
-  const minAge = minAgeParam ? Number(minAgeParam) : undefined;
-  const maxAge = maxAgeParam ? Number(maxAgeParam) : undefined;
-
-  if (minAge !== undefined || maxAge !== undefined) {
-    filteredPeople = filteredPeople.filter(person => {
-      const age = getAge(person);
-
-      if (age === undefined) {
-        return false;
-      }
-
-      const matchesMinAge = minAge === undefined || age >= minAge;
-      const matchesMaxAge = maxAge === undefined || age <= maxAge;
-
-      return matchesMinAge && matchesMaxAge;
-    });
-  }
-
   const nameQuery = searchParams.get('query')?.toLowerCase();
 
   if (nameQuery) {
