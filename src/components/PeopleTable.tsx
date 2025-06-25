@@ -39,14 +39,20 @@ export const PeopleTable: React.FC<PeopleTableProps> = ({
   };
 
   const getSortParams = (column: SortBy) => {
+    let newSortBy: SortBy | null = column;
     let newOrder: SortOrder = 'asc';
 
     if (sortBy === column) {
-      newOrder = order === 'asc' ? 'desc' : 'asc';
+      if (order === 'asc') {
+        newOrder = 'desc';
+      } else {
+        newSortBy = null;
+        newOrder = null;
+      }
     }
 
     return {
-      sort: column,
+      sort: newSortBy,
       order: newOrder,
     };
   };
