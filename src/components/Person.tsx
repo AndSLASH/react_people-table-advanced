@@ -21,15 +21,19 @@ export const Person: React.FC<PersonProps> = ({
 
   const peopleLookup = context.peopleLookup;
 
-  const motherPersonInLookup = person.motherName
-    ? peopleLookup.get(person.motherName)
+  const { sex, born, died, motherName, fatherName, slug } = person;
+
+  const motherPersonInLookup = motherName
+    ? peopleLookup.get(motherName!)
     : undefined;
 
-  const fatherPersonInLookup = person.fatherName
-    ? peopleLookup.get(person.fatherName)
+  const fatherPersonInLookup = fatherName
+    ? peopleLookup.get(fatherName!)
     : undefined;
 
-  const isSelected = selectedPersonSlug === person.slug;
+  const isSelected = selectedPersonSlug === slug;
+
+  const emptyValue = '-';
 
   return (
     <tr
@@ -42,32 +46,36 @@ export const Person: React.FC<PersonProps> = ({
         <PersonLink person={person} />
       </td>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
+      <td>{sex}</td>
+      <td>{born}</td>
+      <td>{died}</td>
 
       <td>
-        {person.motherName ? (
-          motherPersonInLookup ? (
-            <PersonLink person={motherPersonInLookup} />
-          ) : (
-            <span>{person.motherName}</span>
-          )
-        ) : (
-          '-'
-        )}
+        {(() => {
+          if (!motherName) {
+            return emptyValue;
+          }
+
+          if (motherPersonInLookup) {
+            return <PersonLink person={motherPersonInLookup} />;
+          }
+
+          return <span>{motherName}</span>;
+        })()}
       </td>
 
       <td>
-        {person.fatherName ? (
-          fatherPersonInLookup ? (
-            <PersonLink person={fatherPersonInLookup} />
-          ) : (
-            <span>{person.fatherName}</span>
-          )
-        ) : (
-          '-'
-        )}
+        {(() => {
+          if (!fatherName) {
+            return emptyValue;
+          }
+
+          if (fatherPersonInLookup) {
+            return <PersonLink person={fatherPersonInLookup} />;
+          }
+
+          return <span>{fatherName}</span>;
+        })()}
       </td>
     </tr>
   );

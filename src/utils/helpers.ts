@@ -1,4 +1,4 @@
-import { Person, SortBy, SortOrder } from '../types';
+import { Person, Sex, SortBy, SortOrder } from '../types';
 
 export const getCenturyFromYear = (year: number): number => {
   return Math.ceil(year / 100);
@@ -49,7 +49,7 @@ export const applyFilters = (
     });
   }
 
-  const selectedSex = searchParams.get('sex');
+  const selectedSex = searchParams.get('sex') as Sex | null;
 
   if (selectedSex) {
     filteredPeople = filteredPeople.filter(
@@ -80,20 +80,30 @@ export const applySort = (
   const sortedPeople = [...people];
 
   sortedPeople.sort((a, b) => {
-    let valueA = a[sortBy];
-    let valueB = b[sortBy];
+    const rawValueA = a[sortBy];
+    const rawValueB = b[sortBy];
+
+    let valueA: string | number | typeof Infinity;
+    let valueB: string | number | typeof Infinity;
 
     if (sortBy === 'born' || sortBy === 'died') {
-      valueA = valueA === 0 ? Infinity : valueA || Infinity;
-      valueB = valueB === 0 ? Infinity : valueB || Infinity;
+      valueA =
+        rawValueA === 0 || rawValueA === null || rawValueA === undefined
+          ? Infinity
+          : (rawValueA as number);
+      valueB =
+        rawValueB === 0 || rawValueB === null || rawValueB === undefined
+          ? Infinity
+          : (rawValueB as number);
     } else {
-      if (typeof valueA === 'string') {
-        valueA = valueA.toLowerCase();
-      }
-
-      if (typeof valueB === 'string') {
-        valueB = valueB.toLowerCase();
-      }
+      valueA =
+        typeof rawValueA === 'string'
+          ? rawValueA.toLowerCase()
+          : (rawValueA as number);
+      valueB =
+        typeof rawValueB === 'string'
+          ? rawValueB.toLowerCase()
+          : (rawValueB as number);
     }
 
     if (valueA < valueB) {

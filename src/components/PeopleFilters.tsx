@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getSearchWith } from '../utils/searchHelper';
 import { getSearchParamsAsArray } from '../utils/helpers';
 import { SearchLink } from './SearchLink';
+import { Sex } from '../types';
 
 export const PeopleFilters: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +27,20 @@ export const PeopleFilters: React.FC = () => {
   const centuries = Array.from({ length: 5 }, (_, i) => (16 + i).toString());
   const selectedCenturies = getSearchParamsAsArray(searchParams, 'centuries');
 
+  const centuryLinksData = centuries.map(century => {
+    const newCenturies = selectedCenturies.includes(century)
+      ? selectedCenturies.filter(c => c !== century)
+      : [...selectedCenturies, century];
+
+    return {
+      century,
+      params: {
+        centuries: newCenturies.length > 0 ? newCenturies : null,
+      },
+      isActive: selectedCenturies.includes(century),
+    };
+  });
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
@@ -38,14 +53,14 @@ export const PeopleFilters: React.FC = () => {
           All
         </SearchLink>
         <SearchLink
-          params={{ sex: 'm' }}
-          className={cn({ 'is-active': selectedSex === 'm' })}
+          params={{ sex: Sex.Male }}
+          className={cn({ 'is-active': selectedSex === Sex.Male })}
         >
           Male
         </SearchLink>
         <SearchLink
-          params={{ sex: 'f' }}
-          className={cn({ 'is-active': selectedSex === 'f' })}
+          params={{ sex: Sex.Female }}
+          className={cn({ 'is-active': selectedSex === Sex.Female })}
         >
           Female
         </SearchLink>
@@ -71,20 +86,16 @@ export const PeopleFilters: React.FC = () => {
       <div className="panel-block">
         <div className="level is-flex-grow-1 is-mobile" data-cy="CenturyFilter">
           <div className="level-left">
-            {centuries.map(century => (
+            {centuryLinksData.map(item => (
               <SearchLink
                 data-cy="century"
-                key={century}
-                params={{
-                  centuries: selectedCenturies.includes(century)
-                    ? selectedCenturies.filter(c => c !== century)
-                    : [...selectedCenturies, century],
-                }}
+                key={item.century}
+                params={item.params}
                 className={cn('button mr-1', {
-                  'is-info': selectedCenturies.includes(century),
+                  'is-info': item.isActive,
                 })}
               >
-                {century}
+                {item.century}
               </SearchLink>
             ))}
           </div>

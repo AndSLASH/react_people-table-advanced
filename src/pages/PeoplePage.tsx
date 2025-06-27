@@ -10,8 +10,8 @@ import { applyFilters, applySort } from '../utils/helpers';
 
 export const PeoplePage: React.FC = () => {
   const [people, setPeople] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [peopleLookup, setPeopleLookup] = useState<Map<string, Person>>(
     new Map(),
   );
@@ -22,8 +22,8 @@ export const PeoplePage: React.FC = () => {
   const order = (searchParams.get('order') as SortOrder) || null;
 
   useEffect(() => {
-    setLoading(true);
-    setError('');
+    setIsLoading(true);
+    setErrorMessage('');
 
     getPeople()
       .then((data: Person[]) => {
@@ -38,10 +38,10 @@ export const PeoplePage: React.FC = () => {
         setPeopleLookup(newLookup);
       })
       .catch(() => {
-        setError('Something went wrong');
+        setErrorMessage('Something went wrong');
       })
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }, []);
 
@@ -53,12 +53,16 @@ export const PeoplePage: React.FC = () => {
     return currentPeople;
   }, [people, searchParams, sortBy, order]);
 
-  const peopleNotLoaded = !loading && !error && people.length === 0;
+  const peopleNotLoaded = !isLoading && !errorMessage && people.length === 0;
 
-  const peopleLoaded = !loading && !error && people.length > 0;
+  const peopleLoaded =
+    !isLoading && !errorMessage && processedPeople.length > 0;
 
   const peopleNotFound =
-    !loading && !error && people.length > 0 && processedPeople.length === 0;
+    !isLoading &&
+    !errorMessage &&
+    people.length > 0 &&
+    processedPeople.length === 0;
 
   return (
     <>
@@ -66,7 +70,7 @@ export const PeoplePage: React.FC = () => {
 
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
-          {peopleLoaded && (
+          {!isLoading && !errorMessage && (
             <div className="column is-7-tablet is-narrow-desktop">
               <PeopleFilters />
             </div>
@@ -74,11 +78,11 @@ export const PeoplePage: React.FC = () => {
 
           <div className="column">
             <div className="box table-container">
-              {loading && <Loader />}
+              {isLoading && <Loader />}
 
-              {error && (
+              {errorMessage && (
                 <p data-cy="peopleLoadingError" className="has-text-danger">
-                  {error}
+                  {errorMessage}
                 </p>
               )}
 
@@ -88,7 +92,7 @@ export const PeoplePage: React.FC = () => {
                 </p>
               )}
 
-              {peopleLoaded ? (
+              {peopleLoaded && (
                 <PeopleProvider peopleLookup={peopleLookup}>
                   <PeopleTable
                     people={processedPeople}
@@ -97,7 +101,7 @@ export const PeoplePage: React.FC = () => {
                     order={order}
                   />
                 </PeopleProvider>
-              ) : null}
+              )}
 
               {peopleNotFound && (
                 <p>There are no people matching the current search criteria</p>

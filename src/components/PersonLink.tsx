@@ -1,22 +1,27 @@
 import React from 'react';
 import cn from 'classnames';
-import { Link } from 'react-router-dom';
-import { Person as PersonType } from '../types';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Person as PersonType, Sex } from '../types';
+import { getSearchWith } from '../utils/searchHelper';
 
 interface PersonLinkProps {
   person: PersonType;
 }
 
 export const PersonLink: React.FC<PersonLinkProps> = ({ person }) => {
-  const to = `/people/${person.slug}`;
-  const displayText = person.name;
-  const isFemale = person.sex === 'f';
+  const { name, sex, slug } = person;
+  const [searchParams] = useSearchParams();
 
-  const linkClasses = cn({ 'has-text-danger': isFemale });
+  const LinkTo = {
+    pathname: `/people/${slug}`,
+    search: getSearchWith(searchParams, {}),
+  };
+
+  const linkClasses = cn({ 'has-text-danger': sex === Sex.Female });
 
   return (
-    <Link to={to} className={linkClasses}>
-      {displayText}
+    <Link to={LinkTo} className={linkClasses}>
+      {name}
     </Link>
   );
 };
