@@ -43,7 +43,7 @@ export const Person: React.FC<PersonProps> = ({
       })}
     >
       <td>
-        <PersonLink person={person} />
+        <PersonLink person={person} currentSelectedSlug={selectedPersonSlug} />
       </td>
 
       <td>{sex}</td>
@@ -57,7 +57,12 @@ export const Person: React.FC<PersonProps> = ({
           }
 
           if (motherPersonInLookup) {
-            return <PersonLink person={motherPersonInLookup} />;
+            return (
+              <PersonLink
+                person={motherPersonInLookup}
+                currentSelectedSlug={selectedPersonSlug}
+              />
+            );
           }
 
           return <span>{motherName}</span>;
@@ -71,7 +76,12 @@ export const Person: React.FC<PersonProps> = ({
           }
 
           if (fatherPersonInLookup) {
-            return <PersonLink person={fatherPersonInLookup} />;
+            return (
+              <PersonLink
+                person={fatherPersonInLookup}
+                currentSelectedSlug={selectedPersonSlug}
+              />
+            );
           }
 
           return <span>{fatherName}</span>;
