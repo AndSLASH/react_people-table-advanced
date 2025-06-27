@@ -6,21 +6,14 @@ import { getSearchWith } from '../utils/searchHelper';
 
 interface PersonLinkProps {
   person: PersonType;
-  currentSelectedSlug: string | null;
 }
 
-export const PersonLink: React.FC<PersonLinkProps> = ({
-  person,
-  currentSelectedSlug,
-}) => {
+export const PersonLink: React.FC<PersonLinkProps> = ({ person }) => {
   const { name, sex, slug } = person;
   const [searchParams] = useSearchParams();
 
-  const targetPathname =
-    currentSelectedSlug === slug ? '/people' : `/people/${slug}`;
-
   const LinkTo = {
-    pathname: targetPathname,
+    pathname: `/people/${slug}`,
     search: getSearchWith(searchParams, {}),
   };
 
